@@ -24,7 +24,7 @@ jobs:
 
     - name: Run sync script
       env:
-        GOOGLE_APPLICATION_CREDENTIALS_JSON: ${{ secrets.GCP_SERVICE_KEY }}
+        GOOGLE_APPLICATION_CREDENTIALS_JSON: ${{ secrets.GCP_KEY }}
       run: |
         echo "${GOOGLE_APPLICATION_CREDENTIALS_JSON}" > gcp-key.json
         export GOOGLE_APPLICATION_CREDENTIALS=gcp-key.json
