@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Our Wedding Memories</title>
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --main-bg: #fdfcf9;
+      --accent: #a68c6d;
+      --button-bg: #a68c6d;
+      --button-hover: #8b7354;
+      --text: #3e3e3e;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Open Sans', sans-serif;
+      background-color: var(--main-bg);
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 100vh;
+      text-align: center;
+      padding: 30px 20px;
+    }
+
+    h1 {
+      font-family: 'Great Vibes', cursive;
+      font-size: 3rem;
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+    }
+
+    p {
+      font-size: 1.2rem;
+      margin-bottom: 2.5rem;
+      max-width: 600px;
+    }
+
+    .button {
+      display: inline-block;
+      padding: 15px 30px;
+      margin: 10px;
+      font-size: 1rem;
+      font-weight: 600;
+      color: white;
+      background-color: var(--button-bg);
+      border: none;
+      border-radius: 25px;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .button:hover {
+      background-color: var(--button-hover);
+      transform: scale(1.05);
+    }
+
+    .gallery {
+      display: none;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 30px;
+    }
+
+    .gallery img {
+      width: 200px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease;
+    }
+
+    .gallery img:hover {
+      transform: scale(1.05);
+    }
+
+    .footer {
+      margin-top: 60px;
+      font-size: 0.9rem;
+      color: #888;
+    }
+
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 2.2rem;
+      }
+
+      .button {
+        width: 90%;
+        font-size: 1.05rem;
+        padding: 14px;
+      }
+
+      p {
+        font-size: 1rem;
+      }
+
+      .gallery img {
+        width: 100%;
+        max-width: 300px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>Our Wedding Memories</h1>
+  <p>Thank you for being part of our special day. You can share your photos with us or view everyone’s beautiful moments below.</p>
+
+  <a class="button" href="https://docs.google.com/forms/d/e/1FAIpQLSchoLgn3lOpOcwvlh_LAic8pg4hZgDwKr_QjekO7kJ9w8goHw/viewform?usp=dialog" target="_blank">Upload Photos</a>
+
+  <!-- View full gallery in Google Drive-->
+  <a class="button" href="https://drive.google.com/drive/folders/1U7OG43L2CxsB3rdrGXHFwA8e_xWLb3IcYlrFaZhhVEmuEyu0u7_Ic-wMHEyquc83bGE1B2Eb" target="_blank">View Full Gallery</a>
+
+
+  <!-- View Gallery acts as dropdown trigger -->
+  <button class="button" id="toggleGallery">View Gallery Preview</button>
+
+  <!-- Image Gallery -->
+  <div class="gallery" id="gallery"></div>
+
+  <div class="footer">Thank you for sharing the memories</div>
+
+  <script>
+  const gallery = document.getElementById('gallery');
+  const toggleBtn = document.getElementById('toggleGallery');
+  let isVisible = false;
+
+  // Fetch image list from images.json
+  async function loadGallery() {
+    try {
+      const res = await fetch('images.json');
+      const images = await res.json();
+
+      // only load first 10 images
+      const limitedImages = images.slice(0,10);
+
+      images.forEach((file) => {
+        const img = document.createElement('img');
+        img.src = `images/${file}`;
+        img.alt = file;
+        gallery.appendChild(img);
+      });
+    } catch (err) {
+      console.error('Failed to load images:', err);
+      gallery.innerHTML = '<p>Could not load gallery images.</p>';
+    }
+  }
+
+  // Toggle dropdown
+  toggleBtn.addEventListener('click', () => {
+    isVisible = !isVisible;
+    gallery.style.display = isVisible ? 'flex' : 'none';
+    toggleBtn.textContent = isVisible ? 'Hide Gallery Preview' : 'View Gallery Preview';
+
+    // Only load images once
+    if (isVisible && gallery.children.length === 0) {
+      loadGallery();
+    }
+  });
+  </script>
+</body>
+</html>
