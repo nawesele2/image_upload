@@ -8,7 +8,7 @@ import json
 
 # === CONFIG ===
 SERVICE_ACCOUNT_PATH = 'gcp-key.json'
-FOLDER_ID = '1U7OG43L2CxsB3rdrGXHFwA8e_xWLb3IcYlrFaZhhVEmuEyu0u7_Ic-wMHEyquc83bGE1B2Eb'
+FOLDER_ID = '1Z5PI_8K71kb4Qp-69r7fYk0YmwWo5G64SxMet8TK72N420hIUiC_D3ETZ9n_PdHut-OfBacI'
 GITHUB_REPO_PATH = '.'
 TARGET_FOLDER = os.path.join(GITHUB_REPO_PATH, 'images')
 
