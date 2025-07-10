@@ -1,0 +1,43 @@
+name: Sync Images from Google Drive
+
+on:
+  schedule:
+    - cron: '0 0,12 * * *'  # */30 * * * * = every 30 minutes
+  workflow_dispatch:        # allows manual trigger
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: Install dependencies
+      run: |
+        pip install -r requirements.txt
+
+    - name: Run sync script
+      env:
+        GOOGLE_APPLICATION_CREDENTIALS_JSON: ${{ secrets.GCP_SERVICE_KEY }}
+      run: |
+        echo "${GOOGLE_APPLICATION_CREDENTIALS_JSON}" > gcp-key.json
+        export GOOGLE_APPLICATION_CREDENTIALS=gcp-key.json
+        python drive_to_git.py
+
+    - name: Set up Git config
+      run: |
+        git config user.name "github-actions"
+        git config user.email "github-actions@github.com"
+        git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+    
+    - name: Commit and push changes
+      run: |
+        git add .
+        git commit -m "Auto-sync images from Drive" || echo "Nothing to commit"
+        git push
